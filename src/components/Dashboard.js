@@ -79,7 +79,7 @@ class Dashboard extends Component {
 
 function mapStateToProps ({ questions, setUser }) {
     return {
-        questions: Object.values(questions),
+        questions: Object.values(questions).sort((a, b) => (Object.keys(a.timestamp) < Object.keys(b.timestamp)) ? 0 : -1),
         setUser: setUser
     }
 }

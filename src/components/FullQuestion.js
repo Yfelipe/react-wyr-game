@@ -55,7 +55,7 @@ class FullQuestion extends Component {
                                 onChange={this.handleCheck}
                                 checked={this.state.selected === "optionTwo"}
                             />
-                            <Link to={`/question/result/${question.id}`}>
+                            <Link to={`/questions/${question.id}`}>
                                 <Button onClick={() => {this.handleSubmit(setUser.id, question.id, this.state.selected)}} variant="success" disabled={this.state.selected ? false : true}>Submit</Button>
                             </Link>
                         </div>
@@ -68,10 +68,9 @@ class FullQuestion extends Component {
 }
 
 function mapStatToProps ({questions, users, setUser}, props) {
-    const { id } = props.match.params
+    //const { id } = props.match.params
 
     return {
-        id,
         setUser: setUser ? setUser : null,
         users,
         questions

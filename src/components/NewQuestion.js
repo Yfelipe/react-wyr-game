@@ -3,7 +3,7 @@ import {Button, Card, Form} from "react-bootstrap";
 import {connect} from "react-redux";
 import {saveQuestion} from "../actions/questions";
 import {userCreated} from "../actions/users";
-import {Link} from "react-router-dom";
+
 
 
 class NewQuestion extends Component {
@@ -28,8 +28,14 @@ class NewQuestion extends Component {
         const { optionOne, optionTwo } = this.state;
         const id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
-        dispatch(saveQuestion(optionOne, optionTwo, setUser.id, id));
-        dispatch(userCreated(id, setUser.id));
+        if(!optionOne || !optionTwo || optionOne === optionTwo){
+            return alert("Please make sure the options are set and not the same!")
+        } else {
+            dispatch(saveQuestion(optionOne, optionTwo, setUser.id, id));
+            dispatch(userCreated(id, setUser.id));
+
+            window.location = "/"
+        }
 
     }
 
@@ -54,9 +60,7 @@ class NewQuestion extends Component {
                                     <Form.Control type="text" name="optionTwo" placeholder="Enter Option Two Here." onChange={this.handleChange} />
                                 </Form.Group>
                             </Form>
-                            <Link to="/">
-                                <Button variant="success" onClick={() => {this.handleSave()}} >Submit</Button>
-                            </Link>
+                            <Button variant="success" onClick={() => {this.handleSave()}} >Submit</Button>
                         </span>
                     </Card.Body>
                 </Card>

@@ -1,16 +1,15 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import '../App.css';
 import { handleInitialData } from "../actions/shared";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
 import NavMain from "./NavMain";
-import FullQuestion from "./FullQuestion";
-import Poll from "./Poll";
 import NewQuestion from "./NewQuestion";
 import LeaderBoard from "./LeaderBoard";
-import history from "../history";
+import NotFound from "./NotFound";
+import QuestionControler from "./QuestionControler";
 
 class App extends Component {
   componentDidMount() {
@@ -21,21 +20,28 @@ class App extends Component {
   render() {
       const { setUser } = this.props;
 
-      if(!setUser) {
-          history.push("/login")
-      }
+      const PrivateRoute = ({ component: Component, ...rest }) => (
+          <Route {...rest} render={(props) => (
+              setUser
+                  ? <Component {...props} />
+                  : <Redirect to={{
+                      pathname: '/login',
+                      state: { from: props.location }
+                  }} />
+          )} />
+      )
 
     return (
         <Router>
             <Fragment>
                 <NavMain />
                 <div className='main-div'>
-                    <Route path='/' exact component={Dashboard} />
-                    <Route path='/questions/:id' component={FullQuestion} />
+                    <PrivateRoute path='/' exact component={Dashboard} />
+                    <PrivateRoute path='/questions/:id' component={QuestionControler} />
+                    <PrivateRoute path='/add' component={NewQuestion} />
+                    <PrivateRoute path='/leaderboard' component={LeaderBoard} />
+                    <PrivateRoute path="/404" component={NotFound} />
                     <Route path='/login' component={Login} />
-                    <Route path='/question/result/:id' component={Poll} />
-                    <Route path='/add' component={NewQuestion} />
-                    <Route path='/leaderboard' component={LeaderBoard} />
                 </div>
             </Fragment>
         </Router>

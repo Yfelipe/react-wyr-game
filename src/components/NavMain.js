@@ -13,8 +13,8 @@ class NavMain extends Component {
     }
 
     render() {
-         const { setUser } = this.props;
-
+         const { setUser, users } = this.props;
+         
         return (
             <Navbar bg="dark" variant="dark">
                 <Navbar.Brand>Would You Rather?</Navbar.Brand>
@@ -43,10 +43,10 @@ class NavMain extends Component {
                             <Navbar.Text style={{paddingRight: "10px"}}>
                                 <img
                                     className="avatar-image"
-                                    src={setUser.avatar}
+                                    src={users[setUser.id].avatarURL}
                                     alt="Avatar"
                                 />
-                                Hello, {setUser.name}
+                                Hello, {users[setUser.id].name}
                             </Navbar.Text>
                             <Nav.Link as="div" onClick={this.handleLogout}>
                                 <Link className="nav-link-custom" to="/login">
@@ -61,9 +61,10 @@ class NavMain extends Component {
     }
 }
 
-function mapStateToProps ({ setUser }) {
+function mapStateToProps ({ setUser, users }) {
     return {
-        setUser: setUser
+        setUser: setUser,
+        users: users ? users : null
     }
 }
 

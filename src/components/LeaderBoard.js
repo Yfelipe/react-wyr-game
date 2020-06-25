@@ -8,12 +8,12 @@ class LeaderBoard extends Component {
     }
 
     componentDidMount() {
-        this.countHighScore();
     }
 
 
     countHighScore(){
         const { users } = this.props;
+        let userCount = []
 
         users.map((user) => {
             let scores = {
@@ -24,6 +24,8 @@ class LeaderBoard extends Component {
                 avatarUrl: user.avatarURL
             }
 
+            userCount.push(scores);
+
             this.setState(prevState => ({
                 userCount: [...prevState.userCount, scores]
             }))
@@ -32,18 +34,24 @@ class LeaderBoard extends Component {
     }
 
     render() {
-        const { userCount } = this.state;
-        const sortedCount = userCount.sort((a, b) => (a.total < b.total) ? 0 : -1);
+        const { users } = this.props;
+        //const sortedCount = users.sort((a, b) => (Object.keys(a.answers).length < Object.keys(b.answers).length) ? 0 : -1);
 
         return (
             <div>
-                {sortedCount.map((user, key) => {
+                {users.map((user, key) => {
+                    let aQuestions = Object.keys(user.answers).length;
+                    let cQuestions = user.questions.length;
+                    let total = aQuestions + cQuestions;
+
+                    console.log()
+
                     return(
                         <Card className="main-card" key={user.name + "card"}>
                             <Card.Header>{key + 1} Place</Card.Header>
                             <Card.Body className="question-card" key={user.name + "cardBody"}>
                                 <div className="split left">
-                                    <img className="custom-image-question" alt="Avatar" src={user.avatarUrl} />
+                                    <img className="custom-image-question" alt="Avatar" src={user.avatarURL} />
                                 </div>
                                 <div className="split right">
                                     <div style={{float: "left"}}>
@@ -52,17 +60,17 @@ class LeaderBoard extends Component {
                                     <br/>
                                     <div>
                                         <div style={{clear: "both"}}>
-                                            <p style={{float: "left"}}>Answered Questions</p> <p style={{float: "right"}}>{user.aQuestions}</p>
+                                            <p style={{float: "left"}}>Answered Questions</p> <p style={{float: "right"}}>{aQuestions}</p>
                                         </div>
                                         <div style={{clear: "both"}}>
-                                            <p style={{float: "left"}}>Created Questions</p><p style={{float: "right"}}>{user.cQuestions}</p>
+                                            <p style={{float: "left"}}>Created Questions</p><p style={{float: "right"}}>{cQuestions}</p>
                                         </div>
                                     </div>
                                 </div>
                             </Card.Body>
                             <Card.Footer>
                                 <div style={{clear: "both"}}>
-                                    <p style={{float: "left"}}>Score: </p><p style={{float: "right"}}>{user.total}</p>
+                                    <p style={{float: "left"}}>Score: </p><p style={{float: "right"}}>{total}</p>
                                 </div>
                             </Card.Footer>
                         </Card>
@@ -74,8 +82,9 @@ class LeaderBoard extends Component {
 }
 
 function mapStateToProps ({ users }) {
+
     return {
-        users: users ? Object.values(users) : null
+        users: users ? Object.values(users).sort((a, b) => (Object.keys(a.answers).length < Object.keys(b.answers).length) ? 0 : -1) : null,
     }
 }
 

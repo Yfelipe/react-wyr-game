@@ -26,7 +26,7 @@ export default class UnQuestions extends Component {
                     <b>Would you rather?</b>
                     <br/>
                     {question.optionOne.text}
-                    <Link to={`/question/result/${question.id}`} >
+                    <Link to={`/questions/${question.id}`} >
                         <Button variant="outline-success">View Poll</Button>
                     </Link>
                 </Card.Body>

@@ -3,42 +3,43 @@ import { connect } from "react-redux";
 import { Form, Button, Card } from "react-bootstrap";
 import Logo from "../logo.svg"
 import {setUser} from "../actions/setUser";
+import {Redirect} from "react-router-dom";
 
 class Login extends Component {
     state = {
         userId : "",
-        userName: "",
-        userAvatar: ""
+        redirectTo: false
     }
 
     handleLogin = () => {
-        const { userId, userName, userAvatar } = this.state
+        const { userId } = this.state
         const { dispatch } = this.props
 
-        dispatch(setUser(userId, userName, userAvatar))
+        dispatch(setUser(userId))
+
+        this.setState(() => ({
+            redirectTo: true
+        }))
     }
 
     handleChange = (e) => {
-        const {users} = this.props;
-
-        e.preventDefault();
-
         let id = e.target.value;
 
-        users.map((user) => {
-            if (user.id === id) {
-               this.setState({
-                   userId: id,
-                   userName: user.name,
-                   userAvatar: user.avatarURL
-               })
-            }
-            return null;
+        e.preventDefault();
+        this.setState({
+            userId: id,
         })
+
     }
 
     render() {
         const { users } =this.props;
+        const { from } = this.props.location.state || { from: { pathname: '/' } }
+        const { redirectTo } = this.state
+
+        if (redirectTo) {
+            return <Redirect to={from} />
+        }
 
         return (
             <div className='center'>
@@ -52,7 +53,7 @@ class Login extends Component {
                         <Form>
                             <Form.Group controlId="userSelectForm">
                                 <Form.Label><b>Sign in</b></Form.Label>
-                                <Form.Control as="select" value={this.state.userLogin} onChange={this.handleChange}>
+                                <Form.Control as="select" onChange={this.handleChange}>
                                     <option hidden />
                                     {users.length === 0 ? null : users.map((user) => (
                                         <option key={user.id} value={user.id}>
@@ -61,7 +62,7 @@ class Login extends Component {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
-                            <Button variant="dark" href="/" onClick={this.handleLogin}>Sign In</Button>
+                            <Button variant="dark" onClick={this.handleLogin}>Sign In</Button>
                         </Form>
                     </Card.Body>
                 </Card>

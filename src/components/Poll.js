@@ -8,15 +8,6 @@ class Poll extends Component {
         const { id, questions, users, setUser } = this.props ;
         const question = questions[id] ;
 
-        if(!question) {
-            alert("Poll does not exist!")
-            if(!setUser) {
-                return window.location = "/login"
-            } else {
-                return window.location = "/"
-            }
-        }
-
         const totalVotes = question.optionOne.votes.length + question.optionTwo.votes.length;
         const optionOneCount = question.optionOne.votes.length ;
         const optionTwoCount = question.optionTwo.votes.length ;
@@ -53,10 +44,9 @@ class Poll extends Component {
 }
 
 function mapStatToProps ({questions, users, setUser}, props) {
-    const { id } = props.match.params
+   // const { id } = props.match.params
 
     return {
-        id,
         questions,
         users,
         setUser: setUser
